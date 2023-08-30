@@ -22,9 +22,12 @@ public class PlayerControls : MonoBehaviour
 
     [SerializeField] private float _dashDistance = 12.0f;
 
+    private TimeRewind _timeRewind;
 
     private void Awake()
     {
+
+
 
         Cursor.lockState = CursorLockMode.Locked;
         
@@ -33,6 +36,7 @@ public class PlayerControls : MonoBehaviour
         _playerInputActions.Player.Enable();
         _playerInputActions.Player.Atack.performed += Atack;
         _playerInputActions.Player.Dash.performed += Dash;
+        _playerInputActions.Player.Rewind.performed += Rewind;
 
         ////Limb
         //_playerInputActions.Limb.Enable();
@@ -46,7 +50,10 @@ public class PlayerControls : MonoBehaviour
         //_playerInputActions.Statue.BecomeRightLeg.performed += BecomeRightLeg;
     }
 
-    
+    private void Start()
+    {
+        _timeRewind = GetComponent<TimeRewind>();
+    }
 
     private void FixedUpdate()
     {
@@ -106,6 +113,15 @@ public class PlayerControls : MonoBehaviour
 
         _controller.Move(dashDirection);
         //}
+    }
+
+    public void Rewind(InputAction.CallbackContext context)
+    {
+  
+        Debug.Log("Rewind");
+        _timeRewind.Rewind();
+     
+    
     }
 
 }

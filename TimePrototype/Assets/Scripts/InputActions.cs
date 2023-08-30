@@ -80,6 +80,15 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ForwardTime"",
+                    ""type"": ""Button"",
+                    ""id"": ""c6661d91-48d4-4c65-bd96-24082ab280a1"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -207,7 +216,7 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""90b054ae-79f0-4f6f-8695-28c58fb04766"",
-                    ""path"": ""<Mouse>/rightButton"",
+                    ""path"": ""<Keyboard>/leftCtrl"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
@@ -234,6 +243,17 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""groups"": ""Keyboard&Mouse"",
                     ""action"": ""Rewind"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""86f6e5c7-cf31-4bdd-a796-f646f38b6507"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ForwardTime"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -827,6 +847,7 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
         m_Player_Dash = m_Player.FindAction("Dash", throwIfNotFound: true);
         m_Player_Stopwatch = m_Player.FindAction("Stopwatch", throwIfNotFound: true);
         m_Player_Rewind = m_Player.FindAction("Rewind", throwIfNotFound: true);
+        m_Player_ForwardTime = m_Player.FindAction("ForwardTime", throwIfNotFound: true);
         // UI
         m_UI = asset.FindActionMap("UI", throwIfNotFound: true);
         m_UI_Navigate = m_UI.FindAction("Navigate", throwIfNotFound: true);
@@ -904,6 +925,7 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
     private readonly InputAction m_Player_Dash;
     private readonly InputAction m_Player_Stopwatch;
     private readonly InputAction m_Player_Rewind;
+    private readonly InputAction m_Player_ForwardTime;
     public struct PlayerActions
     {
         private @InputActions m_Wrapper;
@@ -914,6 +936,7 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
         public InputAction @Dash => m_Wrapper.m_Player_Dash;
         public InputAction @Stopwatch => m_Wrapper.m_Player_Stopwatch;
         public InputAction @Rewind => m_Wrapper.m_Player_Rewind;
+        public InputAction @ForwardTime => m_Wrapper.m_Player_ForwardTime;
         public InputActionMap Get() { return m_Wrapper.m_Player; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -941,6 +964,9 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
                 @Rewind.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRewind;
                 @Rewind.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRewind;
                 @Rewind.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnRewind;
+                @ForwardTime.started -= m_Wrapper.m_PlayerActionsCallbackInterface.OnForwardTime;
+                @ForwardTime.performed -= m_Wrapper.m_PlayerActionsCallbackInterface.OnForwardTime;
+                @ForwardTime.canceled -= m_Wrapper.m_PlayerActionsCallbackInterface.OnForwardTime;
             }
             m_Wrapper.m_PlayerActionsCallbackInterface = instance;
             if (instance != null)
@@ -963,6 +989,9 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
                 @Rewind.started += instance.OnRewind;
                 @Rewind.performed += instance.OnRewind;
                 @Rewind.canceled += instance.OnRewind;
+                @ForwardTime.started += instance.OnForwardTime;
+                @ForwardTime.performed += instance.OnForwardTime;
+                @ForwardTime.canceled += instance.OnForwardTime;
             }
         }
     }
@@ -1125,6 +1154,7 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
         void OnDash(InputAction.CallbackContext context);
         void OnStopwatch(InputAction.CallbackContext context);
         void OnRewind(InputAction.CallbackContext context);
+        void OnForwardTime(InputAction.CallbackContext context);
     }
     public interface IUIActions
     {

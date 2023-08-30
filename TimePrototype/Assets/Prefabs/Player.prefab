@@ -47,6 +47,8 @@ GameObject:
   - component: {fileID: 8289758326548684467}
   - component: {fileID: 3019709738349619625}
   - component: {fileID: 1434672458007509416}
+  - component: {fileID: 2525337410077227319}
+  - component: {fileID: 8624967663258194483}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -182,7 +184,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2505b60e2f15324f82d85e8a46d0a88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _rewindVisualPrefab: {fileID: 8314582709278641949, guid: 2004d2292ac55fc4bb1f89cb14443228, type: 3}
+--- !u!114 &2525337410077227319
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6882323957119590860}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 620c4ac1835fe7d488397a0bda93e0bf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _enemyLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  _atackRange: 3
+--- !u!114 &8624967663258194483
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6882323957119590860}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2920e8c3f9543254d8e08d55962b2e6c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _enemyLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  _rangedAtackRange: 14
 --- !u!1 &8235816866367355617
 GameObject:
   m_ObjectHideFlags: 0

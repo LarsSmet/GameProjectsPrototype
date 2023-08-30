@@ -23,6 +23,8 @@ public class PlayerControls : MonoBehaviour
     [SerializeField] private float _dashDistance = 12.0f;
 
     private TimeRewind _timeRewind;
+    private MeleeAtackPlayer _meleePlayerAtack;
+    private TimeForwardAtack _timeForwardAtack;
 
     private void Awake()
     {
@@ -34,9 +36,12 @@ public class PlayerControls : MonoBehaviour
         _playerInputActions = new InputActions();
 
         _playerInputActions.Player.Enable();
-        _playerInputActions.Player.Atack.performed += Atack;
+
         _playerInputActions.Player.Dash.performed += Dash;
         _playerInputActions.Player.Rewind.performed += Rewind;
+        _playerInputActions.Player.Atack.performed += MeleeAtack;
+        _playerInputActions.Player.ForwardTime.performed += TimeForward;
+
 
         ////Limb
         //_playerInputActions.Limb.Enable();
@@ -53,6 +58,8 @@ public class PlayerControls : MonoBehaviour
     private void Start()
     {
         _timeRewind = GetComponent<TimeRewind>();
+        _meleePlayerAtack = GetComponent<MeleeAtackPlayer>();
+        _timeForwardAtack = GetComponent<TimeForwardAtack>();
     }
 
     private void FixedUpdate()
@@ -91,13 +98,20 @@ public class PlayerControls : MonoBehaviour
      
     }
 
-    public void Atack(InputAction.CallbackContext context)
+    public void MeleeAtack(InputAction.CallbackContext context)
     {
-        //if (context.performed)
-        //{
-            Debug.Log("Atack");
-        //    _controller.Move(new Vector3(0, 2, 0));
-        //}
+
+
+        Debug.Log("MeleeAtack");
+        _meleePlayerAtack.Atack();
+    }
+
+    public void TimeForward(InputAction.CallbackContext context)
+    {
+
+
+        Debug.Log("TimeForward");
+        _timeForwardAtack.ForwardAtack();
     }
 
     public void Dash(InputAction.CallbackContext context)

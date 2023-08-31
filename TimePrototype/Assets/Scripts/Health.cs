@@ -14,6 +14,8 @@ public class Health : MonoBehaviour
 
     [SerializeField] private float _depletionSpeed = 1.0f;
 
+
+
     // Start is called before the first frame update
     void Start()
     {
@@ -23,6 +25,7 @@ public class Health : MonoBehaviour
         _healthBar.maxValue = _maxHealth;
         _healthBar.minValue = 0;
         _healthBar.value = _healthBar.maxValue;
+       
     }
 
 

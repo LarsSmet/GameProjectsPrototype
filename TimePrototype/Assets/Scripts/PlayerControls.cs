@@ -28,6 +28,27 @@ public class PlayerControls : MonoBehaviour
     private TimeStopAbility _timeStopAbility;
 
 
+
+    //Cooldown stuff
+    private int _timeForwardCharges = 2;
+    private float _maxTimeForwardRechargeTime = 10.0f;
+    private float _currTimeForwardChargeTime = 10.0f;
+    private bool _canTimeForward = true;
+
+    private int _dashCharges = 2;
+    private float _maxDashCRechargeTime = 10.0f;
+    private float _currDashRechargeTime = 10.0f;
+    private bool _canDash = true;
+
+    private float _timeStopMaxCooldown = 10.0f;
+    private float _timeStopCurrCooldown = 10.0f;
+    private bool _canStopTime = true;
+
+    private float _timeRewindMaxCooldown = 10.0f;
+    private float _timeRewindCurrCooldown = 10.0f;
+    private bool _canRewindTime = true;
+
+
     private void Awake()
     {
         _timeRewind = GetComponent<TimeRewind>();
@@ -47,19 +68,77 @@ public class PlayerControls : MonoBehaviour
         _playerInputActions.Player.Stopwatch.performed += StopTime;
 
 
-        ////Limb
-        //_playerInputActions.Limb.Enable();
-        // //_playerInputActions.Limb.Jump.performed += Jump;
-        //_playerInputActions.Limb.BecomeStatue.performed += BecomeStatue;
-
-        ////Statue
-        //_playerInputActions.Statue.BecomeLeftArm.performed += BecomeLeftArm;
-        //_playerInputActions.Statue.BecomeRightArm.performed += BecomeRightArm;
-        //_playerInputActions.Statue.BecomeLeftLeg.performed += BecomeLeftLeg;
-        //_playerInputActions.Statue.BecomeRightLeg.performed += BecomeRightLeg;
     }
 
-  
+    private void Update()
+    {
+        //timestop
+        if (!_canStopTime)
+        {
+            _timeStopCurrCooldown -= Time.deltaTime;
+
+            if(_timeStopCurrCooldown <= 0)
+            {
+                _canStopTime = true;
+                _timeStopCurrCooldown = _timeStopMaxCooldown;
+            }
+        }
+
+
+        //Rewind
+        if(!_canRewindTime)
+        {
+            _timeRewindCurrCooldown -= Time.deltaTime;
+
+            if(_timeRewindCurrCooldown <= 0)
+            {
+                _canRewindTime = true;
+                _timeRewindCurrCooldown = _timeRewindMaxCooldown;
+            }
+        }
+
+
+
+        //Dash
+
+        if (_dashCharges >= 1)
+            _canDash = true;
+        else _canDash = false;
+
+        if (_dashCharges <= 1)
+        {
+            _currDashRechargeTime -= Time.deltaTime;
+
+            if(_currDashRechargeTime <= 0) 
+            {
+                ++_dashCharges;
+                _currDashRechargeTime = _maxDashCRechargeTime;
+
+            }
+
+
+        }
+
+
+        //Timeforward
+
+        if (_timeForwardCharges >= 1)
+            _canTimeForward = true;
+        else _canTimeForward = false;
+
+        if(_timeForwardCharges <= 1)
+        {
+            _currTimeForwardChargeTime -= Time.deltaTime;
+
+            if(_currTimeForwardChargeTime <= 0)
+            {
+                ++_timeForwardCharges;
+                _currTimeForwardChargeTime = _maxTimeForwardRechargeTime;
+            }
+
+        }
+    }
+
 
     private void FixedUpdate()
     {
@@ -115,8 +194,10 @@ public class PlayerControls : MonoBehaviour
 
     public void Dash(InputAction.CallbackContext context)
     {
-        //if (context.performed)
-        //{
+
+        if (!_canDash)
+            return;
+
         Debug.Log("Dash");
 
         Vector3 dashDirection = _camHolder.transform.forward;
@@ -130,7 +211,8 @@ public class PlayerControls : MonoBehaviour
 
     public void Rewind(InputAction.CallbackContext context)
     {
-  
+        
+
         Debug.Log("Rewind");
         _timeRewind.Rewind();
      
@@ -139,7 +221,9 @@ public class PlayerControls : MonoBehaviour
     
     public void StopTime(InputAction.CallbackContext context)
     {
-  
+        if (!_canStopTime)
+            return;
+
         Debug.Log("Stop Time");
         _timeStopAbility.StopTime();
      

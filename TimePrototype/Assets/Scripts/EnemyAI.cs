@@ -14,6 +14,8 @@ public class EnemyAI : MonoBehaviour
         Frozen
     }
 
+    
+
     private State _currState = State.Wander;
 
     private NavMeshAgent _navMeshAgent;
@@ -34,11 +36,18 @@ public class EnemyAI : MonoBehaviour
     [SerializeField] private float _chaseSpeed = 5.0f;
 
     [SerializeField] private LayerMask _playerLayer;
-    [SerializeField] private float _atackRange = 3.0f;
-    [SerializeField] private float _atackDamage = 5.0f;
+    [SerializeField] private float _meleeAtackRange = 3.0f;
+    [SerializeField] private float _meleeAtackDamage = 5.0f;
     [SerializeField] private Transform _atackCenter;
 
     private bool _isFrozen = false;
+
+    [SerializeField] private bool _isRanged = false;
+    [SerializeField] private float _rangedAtackRange;
+    [SerializeField] private float _rangedAtackDamage;
+
+    [SerializeField] private GameObject _enemyProjectilePrefab;
+    [SerializeField] private Transform _projectileShootPos;
 
     // Start is called before the first frame update
 
@@ -75,9 +84,7 @@ public class EnemyAI : MonoBehaviour
             case State.Atack:
                 Atack();
                 break;
-            //case State.Frozen:
-            //    Freeze();
-            //    break;
+          
 
         }
 
@@ -158,61 +165,108 @@ public class EnemyAI : MonoBehaviour
 
         float distToPlayer = Vector3.Distance(transform.position, _player.transform.position);
 
-        if (distToPlayer < (_atackRange - 1.0f)) // in atack range
+        if (_isRanged)
         {
-            //rotate to face player and set state to atack
-    
-            _navMeshAgent.SetDestination(transform.position);
-            _currState = State.Atack; 
+            if (distToPlayer < (_rangedAtackRange - 3.0f)) // in atack range
+            {
+                //rotate to face player and set state to atack
+
+                _navMeshAgent.SetDestination(transform.position);
+                _currState = State.Atack;
+            }
+            else if (distToPlayer > _loseInterestRadius) //Player out of interest range
+            {
+                _wanderCenterPos = transform.position;
+                _navMeshAgent.speed = _wanderSpeed;
+                _currState = State.Wander;
+            }
+            else //Move towards player
+            {
+                NavMeshHit navHit;
+                NavMesh.SamplePosition(_player.transform.position, out navHit, _wanderRadius, -1);
+                _navMeshAgent.SetDestination(new Vector3(navHit.position.x, transform.position.y, navHit.position.z));
+
+            }
         }
-        else if(distToPlayer > _loseInterestRadius) //Player out of interest range
+        else
         {
-            _wanderCenterPos = transform.position;
-            _navMeshAgent.speed = _wanderSpeed;
-            _currState = State.Wander;
-        }
-        else //Move towards player
-        {
-            NavMeshHit navHit;
-            NavMesh.SamplePosition(_player.transform.position, out navHit, _wanderRadius, -1);
-            _navMeshAgent.SetDestination(new Vector3(navHit.position.x, transform.position.y, navHit.position.z));
-            
+
+            if (distToPlayer < (_meleeAtackRange - 1.0f)) // in atack range
+            {
+                //rotate to face player and set state to atack
+
+                _navMeshAgent.SetDestination(transform.position);
+                _currState = State.Atack;
+            }
+            else if (distToPlayer > _loseInterestRadius) //Player out of interest range
+            {
+                _wanderCenterPos = transform.position;
+                _navMeshAgent.speed = _wanderSpeed;
+                _currState = State.Wander;
+            }
+            else //Move towards player
+            {
+                NavMeshHit navHit;
+                NavMesh.SamplePosition(_player.transform.position, out navHit, _wanderRadius, -1);
+                _navMeshAgent.SetDestination(new Vector3(navHit.position.x, transform.position.y, navHit.position.z));
+
+            }
         }
     }
 
     void Atack()
     {
-
-       
         float distToPlayer = Vector3.Distance(transform.position, _player.transform.position);
 
-        if (distToPlayer > _atackRange) //if out of atack range -> chase player again
+        if (_isRanged)
         {
-            _currState = State.Chase;
+            if (distToPlayer > _rangedAtackRange) //if out of atack range -> chase player again
+            {
+                _currState = State.Chase;
+            }
+            else   //TODO: add cooldown depending on animation
+            {
+                Vector3 direction = _player.transform.position - transform.position;
+                Vector3 normalizedDirection = direction.normalized;
+
+                transform.LookAt(_player.transform);
+
+                GameObject projectile = GameObject.Instantiate(_enemyProjectilePrefab, _projectileShootPos.position, _projectileShootPos.rotation);
+                projectile.transform.parent = null;
+
+            }
         }
-        else   //TODO: add cooldown depending on animation
-        {
-            Vector3 direction = _player.transform.position - transform.position;
-            Vector3 normalizedDirection = direction.normalized;
+        else
+        { 
 
 
-            transform.LookAt(_player.transform);
+            if (distToPlayer > _meleeAtackRange) //if out of atack range -> chase player again
+            {
+                _currState = State.Chase;
+            }
+            else   //TODO: add cooldown depending on animation
+            {
+                Vector3 direction = _player.transform.position - transform.position;
+                Vector3 normalizedDirection = direction.normalized;
 
-            Debug.Log("Enemy atack");
 
-            Ray ray = new Ray(_atackCenter.position, _atackCenter.forward);
-            RaycastHit hitInfo;
-            Physics.Raycast(ray, out hitInfo, _atackRange, _playerLayer);
+                transform.LookAt(_player.transform);
 
-            if (hitInfo.collider == null)
-                return;
+                Debug.Log("Enemy atack");
 
-            //Deal dmg
-            Debug.Log("Player hit");
+                Ray ray = new Ray(_atackCenter.position, _atackCenter.forward);
+                RaycastHit hitInfo;
+                Physics.Raycast(ray, out hitInfo, _meleeAtackRange, _playerLayer);
+
+                if (hitInfo.collider == null)
+                    return;
+
+                //Deal dmg
+                Debug.Log("Player hit");
+            }
+
+
         }
-
-        
-
     }
 
 

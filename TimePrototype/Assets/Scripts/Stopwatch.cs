@@ -10,6 +10,10 @@ public class Stopwatch : MonoBehaviour
     [SerializeField] private LayerMask _projectileLayer;
 
     private List<EnemyAI> _enemies = new List<EnemyAI>();
+    private List<EnemyProjectile> _projectiles = new List<EnemyProjectile>();
+
+
+
 
     // Start is called before the first frame update
     void Start()
@@ -44,11 +48,16 @@ public class Stopwatch : MonoBehaviour
 
 
         }
-        else if (other.gameObject.layer == _projectileLayer)
+        else if (other.gameObject.layer == LayerMask.NameToLayer("Projectile"))
         {
+            Debug.Log(other);
+            EnemyProjectile projectile = other.GetComponent<EnemyProjectile>();
+            if (projectile == null)
+                return;
 
-            //get projectile comp
-            //proj script should have something that saves the dir en when it ends should be put back
+            _projectiles.Add(projectile);
+
+            projectile.StopTime();
         }
 
         //Get projectiles
@@ -60,6 +69,11 @@ public class Stopwatch : MonoBehaviour
         foreach(EnemyAI enemy in _enemies)
         {
             enemy.RestartTime();
+        }
+
+        foreach(EnemyProjectile projectile in _projectiles)
+        {
+            projectile.RestartTime();
         }
 
         Destroy(this.gameObject);

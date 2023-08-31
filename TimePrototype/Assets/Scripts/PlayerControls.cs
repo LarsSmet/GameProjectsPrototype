@@ -25,22 +25,26 @@ public class PlayerControls : MonoBehaviour
     private TimeRewind _timeRewind;
     private MeleeAtackPlayer _meleePlayerAtack;
     private TimeForwardAtack _timeForwardAtack;
+    private TimeStopAbility _timeStopAbility;
+
 
     private void Awake()
     {
-
+        _timeRewind = GetComponent<TimeRewind>();
+        _meleePlayerAtack = GetComponent<MeleeAtackPlayer>();
+        _timeForwardAtack = GetComponent<TimeForwardAtack>();
+        _timeStopAbility = GetComponent<TimeStopAbility>();
 
 
         Cursor.lockState = CursorLockMode.Locked;
         
         _playerInputActions = new InputActions();
-
         _playerInputActions.Player.Enable();
-
         _playerInputActions.Player.Dash.performed += Dash;
         _playerInputActions.Player.Rewind.performed += Rewind;
         _playerInputActions.Player.Atack.performed += MeleeAtack;
         _playerInputActions.Player.ForwardTime.performed += TimeForward;
+        _playerInputActions.Player.Stopwatch.performed += StopTime;
 
 
         ////Limb
@@ -55,12 +59,7 @@ public class PlayerControls : MonoBehaviour
         //_playerInputActions.Statue.BecomeRightLeg.performed += BecomeRightLeg;
     }
 
-    private void Start()
-    {
-        _timeRewind = GetComponent<TimeRewind>();
-        _meleePlayerAtack = GetComponent<MeleeAtackPlayer>();
-        _timeForwardAtack = GetComponent<TimeForwardAtack>();
-    }
+  
 
     private void FixedUpdate()
     {
@@ -134,6 +133,15 @@ public class PlayerControls : MonoBehaviour
   
         Debug.Log("Rewind");
         _timeRewind.Rewind();
+     
+    
+    } 
+    
+    public void StopTime(InputAction.CallbackContext context)
+    {
+  
+        Debug.Log("Stop Time");
+        _timeStopAbility.StopTime();
      
     
     }

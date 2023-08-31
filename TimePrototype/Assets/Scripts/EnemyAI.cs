@@ -10,7 +10,8 @@ public class EnemyAI : MonoBehaviour
     {
         Wander,
         Chase,
-        Atack
+        Atack,
+        Frozen
     }
 
     private State _currState = State.Wander;
@@ -37,6 +38,7 @@ public class EnemyAI : MonoBehaviour
     [SerializeField] private float _atackDamage = 5.0f;
     [SerializeField] private Transform _atackCenter;
 
+    private bool _isFrozen = false;
 
     // Start is called before the first frame update
 
@@ -55,14 +57,12 @@ public class EnemyAI : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //if (_hasSpottedPlayer)
-        //{
+       
 
-        //}
-        //else
-        //{
-        //    Wander();
-        //}
+
+
+        if (_isFrozen)
+            return;
 
         switch (_currState)
         {
@@ -75,6 +75,9 @@ public class EnemyAI : MonoBehaviour
             case State.Atack:
                 Atack();
                 break;
+            //case State.Frozen:
+            //    Freeze();
+            //    break;
 
         }
 
@@ -211,5 +214,20 @@ public class EnemyAI : MonoBehaviour
         
 
     }
+
+
+    public void StopTime()
+    {
+        _isFrozen = true;
+        _navMeshAgent.SetDestination(transform.position);
+
+    }
+
+    public void RestartTime()
+    {
+        _isFrozen = false;
+    }
+
+   
 
 }

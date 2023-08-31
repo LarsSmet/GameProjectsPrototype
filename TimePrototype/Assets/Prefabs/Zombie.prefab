@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 3497030673285923368}
   - component: {fileID: 3123752450407391990}
   - component: {fileID: 3159246224616798691}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Armvisual
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -111,6 +111,7 @@ GameObject:
   - component: {fileID: 4285017954717126840}
   - component: {fileID: 4285017954717126841}
   - component: {fileID: 4285017954717126842}
+  - component: {fileID: 8195576974362469698}
   m_Layer: 6
   m_Name: Zombie
   m_TagString: Untagged
@@ -247,6 +248,22 @@ MonoBehaviour:
   _atackRange: 3
   _atackDamage: 5
   _atackCenter: {fileID: 172399396515061344}
+--- !u!54 &8195576974362469698
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4285017954717126843}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_UseGravity: 1
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 4
+  m_CollisionDetection: 0
 --- !u!1 &6183564460970620806
 GameObject:
   m_ObjectHideFlags: 0
@@ -256,7 +273,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 172399396515061344}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: ArmHeight(atack height for raycast)
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -12,7 +12,7 @@ public class Health : MonoBehaviour
 
     private Slider _healthBar;
 
-    [SerializeField] private float _depletionSpeed = 1.0f;
+    [SerializeField] private float _depletionSpeed = 0.3f;
 
 
 

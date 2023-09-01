@@ -5,6 +5,14 @@ TagManager:
   serializedVersion: 2
   tags:
   - HealthBar
+  - DashCharge1
+  - DashCharge2
+  - ForwardCharge1
+  - ForwardCharge2
+  - CooldownDash
+  - CooldownForward
+  - CooldownStop
+  - CooldownRewind
   layers:
   - Default
   - TransparentFX

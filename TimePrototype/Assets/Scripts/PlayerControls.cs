@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.UI;
 
 public class PlayerControls : MonoBehaviour
 {
@@ -34,19 +35,29 @@ public class PlayerControls : MonoBehaviour
     private float _maxTimeForwardRechargeTime = 10.0f;
     private float _currTimeForwardChargeTime = 10.0f;
     private bool _canTimeForward = true;
+    private Image _timeForwardCharge1Visual;
+    private Image _timeForwardCharge2Visual;
 
     private int _dashCharges = 2;
     private float _maxDashCRechargeTime = 10.0f;
     private float _currDashRechargeTime = 10.0f;
     private bool _canDash = true;
+    private Image _dashCharge1Visual;
+    private Image _dashCharge2Visual;
 
     private float _timeStopMaxCooldown = 10.0f;
     private float _timeStopCurrCooldown = 10.0f;
     private bool _canStopTime = true;
+   
 
     private float _timeRewindMaxCooldown = 10.0f;
     private float _timeRewindCurrCooldown = 10.0f;
     private bool _canRewindTime = true;
+
+    private Text _textTimerForward;
+    private Text _textTimerDash;
+    private Text _textTimerTimeStop;
+    private Text _textTimerRewind;
 
 
     private void Awake()
@@ -67,6 +78,16 @@ public class PlayerControls : MonoBehaviour
         _playerInputActions.Player.ForwardTime.performed += TimeForward;
         _playerInputActions.Player.Stopwatch.performed += StopTime;
 
+        _dashCharge1Visual = GameObject.FindGameObjectWithTag("DashCharge1").GetComponent<Image>();
+        _dashCharge2Visual = GameObject.FindGameObjectWithTag("DashCharge2").GetComponent<Image>();
+        _timeForwardCharge1Visual = GameObject.FindGameObjectWithTag("ForwardCharge1").GetComponent<Image>();
+        _timeForwardCharge2Visual = GameObject.FindGameObjectWithTag("ForwardCharge2").GetComponent<Image>();
+
+
+        _textTimerForward = GameObject.FindGameObjectWithTag("CooldownForward").GetComponent<Text>();
+        _textTimerDash = GameObject.FindGameObjectWithTag("CooldownDash").GetComponent<Text>();
+        _textTimerTimeStop = GameObject.FindGameObjectWithTag("CooldownStop").GetComponent<Text>();
+        _textTimerRewind = GameObject.FindGameObjectWithTag("CooldownRewind").GetComponent<Text>();
 
     }
 
@@ -84,6 +105,7 @@ public class PlayerControls : MonoBehaviour
             }
         }
 
+        
 
         //Rewind
         if(!_canRewindTime)
@@ -137,7 +159,51 @@ public class PlayerControls : MonoBehaviour
             }
 
         }
+
+
+        switch (_dashCharges) 
+        {
+            case 0:
+                _dashCharge1Visual.enabled = false;
+                _dashCharge2Visual.enabled = false;
+                break;
+            case 1:
+                _dashCharge1Visual.enabled = true;
+                _dashCharge2Visual.enabled = false;
+                break;
+            case 2:
+                _dashCharge1Visual.enabled = true;
+                _dashCharge2Visual.enabled = true;
+                break;
+        }
+
+        switch (_timeForwardCharges)
+        {
+            case 0:
+                _timeForwardCharge1Visual.enabled = false;
+                _timeForwardCharge2Visual.enabled = false;
+                break;
+            case 1:
+                _timeForwardCharge1Visual.enabled = true;
+                _timeForwardCharge2Visual.enabled = false;
+                break;
+            case 2:
+                _timeForwardCharge1Visual.enabled = true;
+                _timeForwardCharge2Visual.enabled = true;
+                break;
+        }
+
+
+     
+
+
+        _textTimerForward.text = Mathf.Floor(_currTimeForwardChargeTime).ToString("F0");
+        _textTimerDash.text = Mathf.Floor(_currDashRechargeTime).ToString("F0");
+        _textTimerTimeStop.text = Mathf.Floor(_timeStopCurrCooldown).ToString("F0");
+        _textTimerRewind.text = Mathf.Floor(_timeRewindCurrCooldown).ToString("F0");
+
     }
+
 
 
     private void FixedUpdate()
@@ -186,10 +252,12 @@ public class PlayerControls : MonoBehaviour
 
     public void TimeForward(InputAction.CallbackContext context)
     {
-
+        if (!_canTimeForward)
+            return;
 
         Debug.Log("TimeForward");
         _timeForwardAtack.ForwardAtack();
+        --_timeForwardCharges;
     }
 
     public void Dash(InputAction.CallbackContext context)
@@ -206,16 +274,20 @@ public class PlayerControls : MonoBehaviour
         dashDirection *= _dashDistance;
 
         _controller.Move(dashDirection);
+
+        --_dashCharges;
+
         //}
     }
 
     public void Rewind(InputAction.CallbackContext context)
     {
-        
+        if (!_canRewindTime)
+            return;
 
         Debug.Log("Rewind");
         _timeRewind.Rewind();
-     
+        _canRewindTime = false;
     
     } 
     
@@ -226,8 +298,9 @@ public class PlayerControls : MonoBehaviour
 
         Debug.Log("Stop Time");
         _timeStopAbility.StopTime();
-     
-    
+
+
+        _canStopTime = false;
     }
 
 }

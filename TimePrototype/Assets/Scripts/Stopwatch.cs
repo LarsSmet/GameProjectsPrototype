@@ -66,7 +66,11 @@ public class Stopwatch : MonoBehaviour
 
     void RestartTime()
     {
-        foreach(EnemyAI enemy in _enemies)
+
+        GameObject.FindGameObjectWithTag("Player").GetComponent<Health>().RestartHealthDecay();
+
+
+        foreach (EnemyAI enemy in _enemies)
         {
             enemy.RestartTime();
         }

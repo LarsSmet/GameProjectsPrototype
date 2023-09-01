@@ -39,6 +39,7 @@ public class EnemyAI : MonoBehaviour
     [SerializeField] private float _meleeAtackRange = 3.0f;
     [SerializeField] private float _meleeAtackDamage = 5.0f;
     [SerializeField] private Transform _atackCenter;
+    [SerializeField] private float _meleeDamage = 5.0f;
 
     private bool _isFrozen = false;
 
@@ -48,6 +49,7 @@ public class EnemyAI : MonoBehaviour
 
     [SerializeField] private GameObject _enemyProjectilePrefab;
     [SerializeField] private Transform _projectileShootPos;
+    
 
     // Start is called before the first frame update
 
@@ -58,6 +60,19 @@ public class EnemyAI : MonoBehaviour
     private bool _dealDamageAfterFreeze = false;
     private float _damageAfterFreeze;
 
+
+    private float _meleeAtackCooldown = 1.0f;
+    private float _meleeAtackCurrCooldown = 1.0f;
+    private bool _canMeleeAtack = true;
+    
+    
+    private float _rangedAtackCooldown = 3.0f;
+    private float _rangedAtackCurrCooldown = 3.0f;
+    private bool _canRangedAtack = true;
+
+
+
+
     void Start()
     {
         _navMeshAgent = GetComponent<NavMeshAgent>();
@@ -66,6 +81,9 @@ public class EnemyAI : MonoBehaviour
         //_navMeshAgent.stoppingDistance = _atackRange - 0.5f;
         _player =  GameObject.FindGameObjectWithTag("Player");
         _wanderPoint = GetRandomWanderPoint();
+
+        _meleeAtackCurrCooldown = _meleeAtackCooldown;
+        _rangedAtackCurrCooldown = _rangedAtackCooldown;
 
     }
 
@@ -78,6 +96,35 @@ public class EnemyAI : MonoBehaviour
 
         if (_isFrozen)
             return;
+
+
+        if (_isRanged)
+        {
+            if (!_canRangedAtack)
+            {
+                _rangedAtackCurrCooldown -= Time.deltaTime;
+
+                if (_rangedAtackCurrCooldown <= 0)
+                {
+                    _canRangedAtack = true;
+                    _rangedAtackCurrCooldown = _rangedAtackCooldown;
+                }
+            }
+        }
+        else
+        {
+            if (!_canMeleeAtack)
+            {
+                _meleeAtackCurrCooldown -= Time.deltaTime;
+
+                if (_meleeAtackCurrCooldown <= 0)
+                {
+                    _canMeleeAtack = true;
+                    _meleeAtackCurrCooldown = _meleeAtackCooldown;
+                }
+            }
+        }
+
 
         switch (_currState)
         {
@@ -106,6 +153,10 @@ public class EnemyAI : MonoBehaviour
         {
             Destroy(this.gameObject);
         }
+
+       
+
+        
 
     }
 
@@ -239,12 +290,18 @@ public class EnemyAI : MonoBehaviour
 
         if (_isRanged)
         {
+        
+
             if (distToPlayer > _rangedAtackRange) //if out of atack range -> chase player again
             {
                 _currState = State.Chase;
             }
             else   //TODO: add cooldown depending on animation
             {
+
+                if (!_canRangedAtack)
+                    return;
+
                 Vector3 direction = _player.transform.position - transform.position;
                 Vector3 normalizedDirection = direction.normalized;
 
@@ -253,6 +310,8 @@ public class EnemyAI : MonoBehaviour
                 GameObject projectile = GameObject.Instantiate(_enemyProjectilePrefab, _projectileShootPos.position, _projectileShootPos.rotation);
                 projectile.transform.parent = null;
 
+
+                _canRangedAtack = false;
             }
         }
         else
@@ -265,6 +324,11 @@ public class EnemyAI : MonoBehaviour
             }
             else   //TODO: add cooldown depending on animation
             {
+
+                if (!_canMeleeAtack)
+                    return;
+
+
                 Vector3 direction = _player.transform.position - transform.position;
                 Vector3 normalizedDirection = direction.normalized;
 
@@ -279,6 +343,15 @@ public class EnemyAI : MonoBehaviour
 
                 if (hitInfo.collider == null)
                     return;
+
+                Health playerHealth = hitInfo.collider.gameObject.GetComponentInParent<Health>();
+
+
+                if (playerHealth == null)
+                    return;
+                playerHealth.DealDamage(_meleeDamage);
+
+                _canMeleeAtack = false;
 
                 //Deal dmg
                 Debug.Log("Player hit");

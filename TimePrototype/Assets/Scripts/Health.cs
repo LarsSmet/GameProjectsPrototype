@@ -7,14 +7,14 @@ public class Health : MonoBehaviour
 {
     
 
-     private float _maxHealth = 3.0f;
+     [SerializeField] float _maxHealth = 50.0f;
     private float _currHealth;
 
     private Slider _healthBar;
 
-    [SerializeField] private float _depletionSpeed = 0.3f;
+    [SerializeField] private float _depletionSpeed = 0.1f;
 
-
+    bool _stopHealthDecay = false;
 
     // Start is called before the first frame update
     void Start()
@@ -32,7 +32,12 @@ public class Health : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        _currHealth -= Time.deltaTime * _depletionSpeed;
+        if (!_stopHealthDecay)
+        {
+
+            _currHealth -= Time.deltaTime * _depletionSpeed;
+
+        }
 
         if(_currHealth < 0)
         {
@@ -43,14 +48,32 @@ public class Health : MonoBehaviour
     }
 
 
-    void Heal(float health)
+    public void Heal(float health)
     {
         _currHealth += health;
     }
 
-    void TakeDamage(float damage)
+    public void DealDamage(float damage)
     {
         _currHealth -= damage;
+    }
+
+
+
+    public void StopHealthDecay()
+    {
+        _stopHealthDecay=true;
+    }
+
+    public void RestartHealthDecay()
+    {
+        _stopHealthDecay = false;
+    }
+
+    public void SaveHealthBeforeRewind()
+    {
+
+
     }
 
 }

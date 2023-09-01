@@ -6,8 +6,9 @@ using UnityEngine;
 public class EnemyProjectile : MonoBehaviour
 {
     private Rigidbody _rb;
-    [SerializeField] private float _projectileSpeed;
+    [SerializeField] private float _projectileSpeed = 10.0f;
     private Vector3 _oldVelocity = Vector3.zero;
+    [SerializeField] float _projectileDamage = 10.0f;
 
     // Start is called before the first frame update
     void Start()
@@ -32,5 +33,28 @@ public class EnemyProjectile : MonoBehaviour
     public void RestartTime()
     {
        _rb.velocity = _oldVelocity;
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision != null)
+        {
+            if (collision.gameObject.layer == LayerMask.NameToLayer("Player"))
+            {
+                Health health = collision.gameObject.GetComponent<Health>();
+
+                if (health == null)
+                {
+                    Destroy(this.gameObject);
+                    return;
+                }
+                health.DealDamage(_projectileDamage);
+                
+            }
+
+            if(collision.gameObject.layer != LayerMask.NameToLayer("Enemy"))
+                Destroy(this.gameObject);
+        }
+      
     }
 }

@@ -23,6 +23,7 @@ public class TimeStopAbility : MonoBehaviour
     {
         GameObject stopWatch = GameObject.Instantiate(_stopWatchPrefab, gameObject.transform.position, gameObject.transform.rotation);
         stopWatch.transform.parent = null;
+        GetComponent<Health>().StopHealthDecay();
 
     }
 

@@ -76,4 +76,13 @@ public class Health : MonoBehaviour
 
     }
 
+    public float GetCurrHealth()
+    {
+        return _currHealth;
+    }
+
+    public void SetCurrHealth(float health)
+    {
+        _currHealth=health;
+    }
 }

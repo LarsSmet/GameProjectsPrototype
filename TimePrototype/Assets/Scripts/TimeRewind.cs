@@ -6,24 +6,28 @@ public class TimeRewind : MonoBehaviour
 {
 
     [System.Serializable]
-    public struct PositionRotation
+    public struct PositionRotationHealth
     {
         public Vector3 position;
         public Quaternion rotation;
+        public float health;
 
-        public PositionRotation(Vector3 pos, Quaternion rot)
+        public PositionRotationHealth(Vector3 pos, Quaternion rot, float hp)
         {
             position = pos;
             rotation = rot;
+            health =  hp;
+
         }
     }
 
-    private List<PositionRotation> _storedData = new List<PositionRotation>();
+    private List<PositionRotationHealth> _storedData = new List<PositionRotationHealth>();
     private float _timeInterval = 1.0f; //Interval to store the posrot ( every second)
     private float _maxStoredTime = 3.0f; //Max time to store the posrot (max 3 sec) also is the amount of time you go back in time
     private float l_astStoredTime;
 
     private CharacterController _controller;
+    private Health _health;
 
    // private GameObject _rewindVisual;
     //[SerializeField] private GameObject _rewindVisualPrefab;
@@ -32,6 +36,7 @@ public class TimeRewind : MonoBehaviour
     {
         l_astStoredTime = Time.time;
         _controller = GetComponent<CharacterController>();
+        _health = GetComponent<Health>();
         //_rewindVisual = GameObject.Instantiate(_rewindVisualPrefab, _controller.transform);
     }
 
@@ -50,8 +55,8 @@ public class TimeRewind : MonoBehaviour
 
     private void StorePosRot()
     {
-        PositionRotation posRot = new PositionRotation(transform.position, transform.rotation);
-        _storedData.Add(posRot);
+        PositionRotationHealth posRotHP = new PositionRotationHealth(transform.position, transform.rotation,_health.GetCurrHealth());
+        _storedData.Add(posRotHP);
 
 
 
@@ -66,11 +71,12 @@ public class TimeRewind : MonoBehaviour
     {
         if (_storedData.Count > 0)
         {
-            PositionRotation posRot = _storedData[0];
+            PositionRotationHealth posRotHP = _storedData[0];
 
             _controller.enabled = false;
-            transform.position = posRot.position;
-            transform.rotation = posRot.rotation;
+            transform.position = posRotHP.position;
+            transform.rotation = posRotHP.rotation;
+            _health.SetCurrHealth(posRotHP.health);
             _controller.enabled = true;
 
             _storedData.RemoveAt(0);

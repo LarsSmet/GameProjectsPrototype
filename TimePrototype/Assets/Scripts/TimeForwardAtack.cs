@@ -29,7 +29,10 @@ public class TimeForwardAtack : MonoBehaviour
 
         if (hitInfo.collider == null)
             return;
-        Destroy(hitInfo.collider.gameObject);
+
+        EnemyAI enemy = hitInfo.collider.gameObject.GetComponent<EnemyAI>();
+        if (enemy != null)
+            enemy.DealDamage(20);
 
     }
 }

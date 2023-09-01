@@ -52,6 +52,12 @@ public class EnemyAI : MonoBehaviour
     // Start is called before the first frame update
 
     private GameObject _player;
+
+
+    private float _health = 10.0f;
+    private bool _dealDamageAfterFreeze = false;
+    private float _damageAfterFreeze;
+
     void Start()
     {
         _navMeshAgent = GetComponent<NavMeshAgent>();
@@ -86,6 +92,19 @@ public class EnemyAI : MonoBehaviour
                 break;
           
 
+        }
+
+        if(_dealDamageAfterFreeze)
+        {
+           
+            _dealDamageAfterFreeze = false;
+            _health -= _damageAfterFreeze;
+        }
+
+
+        if(_health <= 0)
+        {
+            Destroy(this.gameObject);
         }
 
     }
@@ -282,6 +301,17 @@ public class EnemyAI : MonoBehaviour
         _isFrozen = false;
     }
 
-   
+   public void DealDamage(float damage)
+   {
+
+        if(_isFrozen )
+        {
+            _dealDamageAfterFreeze = true;
+            _damageAfterFreeze = damage;
+            return;
+        }
+
+        _health -= damage;
+   }
 
 }

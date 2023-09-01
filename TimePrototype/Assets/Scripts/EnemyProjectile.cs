@@ -49,10 +49,10 @@ public class EnemyProjectile : MonoBehaviour
                     return;
                 }
                 health.DealDamage(_projectileDamage);
-                
+                Destroy(this.gameObject);
             }
 
-            if(collision.gameObject.layer != LayerMask.NameToLayer("Enemy"))
+            if(collision.gameObject.layer == LayerMask.NameToLayer("Level"))
                 Destroy(this.gameObject);
         }
       

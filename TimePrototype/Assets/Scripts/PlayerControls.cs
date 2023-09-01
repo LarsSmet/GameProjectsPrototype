@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEditor;
@@ -58,6 +59,12 @@ public class PlayerControls : MonoBehaviour
     private Text _textTimerDash;
     private Text _textTimerTimeStop;
     private Text _textTimerRewind;
+
+    [SerializeField] private GameObject _clonePrefab;
+    [SerializeField] private Transform _cloneSpawnPos;
+
+    private List<GameObject> _cloneList = new List<GameObject>();
+    public bool _isFrozen = false;
 
 
     private void Awake()
@@ -248,6 +255,14 @@ public class PlayerControls : MonoBehaviour
 
         Debug.Log("MeleeAtack");
         _meleePlayerAtack.Atack();
+
+        if (_isFrozen)
+            _cloneList.Add(Instantiate(_clonePrefab, _cloneSpawnPos.transform.position, _cloneSpawnPos.transform.rotation));
+
+
+        //eventually replace te code in atack or do if else statement?
+
+
     }
 
     public void TimeForward(InputAction.CallbackContext context)
@@ -258,6 +273,12 @@ public class PlayerControls : MonoBehaviour
         Debug.Log("TimeForward");
         _timeForwardAtack.ForwardAtack();
         --_timeForwardCharges;
+
+        if (_isFrozen)
+            _cloneList.Add(Instantiate(_clonePrefab, _cloneSpawnPos.transform.position, _cloneSpawnPos.transform.rotation));
+
+
+
     }
 
     public void Dash(InputAction.CallbackContext context)
@@ -303,4 +324,19 @@ public class PlayerControls : MonoBehaviour
         _canStopTime = false;
     }
 
+    public void UnFreeze()
+    {
+
+        _isFrozen = false;
+
+        Invoke("DeleteClones", 0.5f);
+    }
+
+    private void DeleteClones()
+    {
+        foreach(GameObject clone in _cloneList)
+        {
+            Destroy(clone);
+        }
+    }
 }

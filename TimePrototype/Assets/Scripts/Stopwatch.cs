@@ -5,14 +5,14 @@ using UnityEngine;
 
 public class Stopwatch : MonoBehaviour
 {
-    [SerializeField] private float _stopwatchDuration = 5;
+    [SerializeField] private float _stopwatchDuration = 4;
     [SerializeField] private LayerMask _enemyLayer;
     [SerializeField] private LayerMask _projectileLayer;
 
     private List<EnemyAI> _enemies = new List<EnemyAI>();
     private List<EnemyProjectile> _projectiles = new List<EnemyProjectile>();
 
-
+    private PlayerControls _playerControls;
 
 
     // Start is called before the first frame update
@@ -20,6 +20,13 @@ public class Stopwatch : MonoBehaviour
     {
         //Invoke the restarttime after x sec
         Invoke("RestartTime", _stopwatchDuration);
+
+        GameObject player = GameObject.FindGameObjectWithTag("Player");
+        if (player != null)
+        {
+             _playerControls = player.GetComponent<PlayerControls>();
+            _playerControls._isFrozen = true;
+        }
     }
 
     // Update is called once per frame
@@ -79,6 +86,8 @@ public class Stopwatch : MonoBehaviour
         {
             projectile.RestartTime();
         }
+
+        _playerControls.UnFreeze();
 
         Destroy(this.gameObject);
     }

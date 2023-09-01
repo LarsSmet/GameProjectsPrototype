@@ -28,7 +28,7 @@ public class EnemyAI : MonoBehaviour
     [SerializeField] private float _wanderRadius = 10.0f;
     [SerializeField] private float _wanderSpeed = 0.5f;
 
-    /*[SerializeField] private*/ public float _fovRadius = 10.0f;
+    /*[SerializeField] private*/ public float _fovRadius = 11.0f;
     /*[SerializeField] private*/ public float _fovAngle = 90.0f;
     [SerializeField] private LayerMask _obstructionMask;
     private bool _hasSpottedPlayer = false;
@@ -70,7 +70,7 @@ public class EnemyAI : MonoBehaviour
     private float _rangedAtackCurrCooldown = 3.0f;
     private bool _canRangedAtack = true;
 
-
+    [SerializeField] private float _hearingRange = 8.0f;
 
 
     void Start()
@@ -183,7 +183,13 @@ public class EnemyAI : MonoBehaviour
 
         }
 
-        //TODO: Maybe add hearing radius
+        float distToPlayer = Vector3.Distance(transform.position, _player.transform.position);
+
+        if(distToPlayer <= _hearingRange)
+        {
+            _navMeshAgent.speed = _chaseSpeed;
+            _currState = State.Chase;
+        }
 
     }
 

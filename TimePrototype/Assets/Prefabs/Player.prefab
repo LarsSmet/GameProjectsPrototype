@@ -236,7 +236,7 @@ MonoBehaviour:
   _enemyLayer:
     serializedVersion: 2
     m_Bits: 64
-  _atackRange: 4
+  _atackRange: 4.2
 --- !u!114 &8624967663258194483
 MonoBehaviour:
   m_ObjectHideFlags: 0

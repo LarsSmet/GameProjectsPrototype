@@ -51,6 +51,8 @@ public class Health : MonoBehaviour
     public void Heal(float health)
     {
         _currHealth += health;
+        if(_currHealth > _maxHealth) 
+            _currHealth = _maxHealth;
     }
 
     public void DealDamage(float damage)

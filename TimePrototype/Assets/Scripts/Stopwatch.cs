@@ -44,7 +44,7 @@ public class Stopwatch : MonoBehaviour
         //Get enemies
         if (other.gameObject.layer == LayerMask.NameToLayer("Enemy"))
         {
-            Debug.Log(other);
+           // Debug.Log(other);
             EnemyAI enemy = other.GetComponent<EnemyAI>();
             if (enemy == null)
                 return;

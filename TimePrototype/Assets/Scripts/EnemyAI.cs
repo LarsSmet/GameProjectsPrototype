@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
@@ -37,7 +38,7 @@ public class EnemyAI : MonoBehaviour
 
     [SerializeField] private LayerMask _playerLayer;
     [SerializeField] private float _meleeAtackRange = 3.0f;
-    [SerializeField] private float _meleeAtackDamage = 5.0f;
+
     [SerializeField] private Transform _atackCenter;
     [SerializeField] private float _meleeDamage = 5.0f;
 
@@ -72,7 +73,9 @@ public class EnemyAI : MonoBehaviour
 
     [SerializeField] private float _hearingRange = 8.0f;
 
+    private Health _playerHealth;
 
+    [SerializeField] float _playerHealtRegen = 10.0f;
     void Start()
     {
         _navMeshAgent = GetComponent<NavMeshAgent>();
@@ -80,6 +83,7 @@ public class EnemyAI : MonoBehaviour
         _navMeshAgent.speed = _wanderSpeed;
         //_navMeshAgent.stoppingDistance = _atackRange - 0.5f;
         _player =  GameObject.FindGameObjectWithTag("Player");
+        _playerHealth = _player.GetComponent<Health>();
         _wanderPoint = GetRandomWanderPoint();
 
         _meleeAtackCurrCooldown = _meleeAtackCooldown;
@@ -95,7 +99,12 @@ public class EnemyAI : MonoBehaviour
 
 
         if (_isFrozen)
+        {
+            _navMeshAgent.isStopped = true;
+            _navMeshAgent.velocity = Vector3.zero;
             return;
+        }
+            
 
 
         if (_isRanged)
@@ -151,6 +160,7 @@ public class EnemyAI : MonoBehaviour
 
         if(_health <= 0)
         {
+            _playerHealth.Heal(_playerHealtRegen);
             Destroy(this.gameObject);
         }
 
@@ -171,7 +181,7 @@ public class EnemyAI : MonoBehaviour
         else
         {
             _navMeshAgent.SetDestination(_wanderPoint);
-            Debug.Log("wander");
+           // Debug.Log("wander");
         }
 
         FieldOfViewCheck();
@@ -341,7 +351,7 @@ public class EnemyAI : MonoBehaviour
 
                 transform.LookAt(_player.transform);
 
-                Debug.Log("Enemy atack");
+                //Debug.Log("Enemy atack");
 
                 Ray ray = new Ray(_atackCenter.position, _atackCenter.forward);
                 RaycastHit hitInfo;
@@ -360,7 +370,7 @@ public class EnemyAI : MonoBehaviour
                 _canMeleeAtack = false;
 
                 //Deal dmg
-                Debug.Log("Player hit");
+                //Debug.Log("Player hit");
             }
 
 
@@ -370,13 +380,22 @@ public class EnemyAI : MonoBehaviour
 
     public void StopTime()
     {
-        _isFrozen = true;
-        _navMeshAgent.SetDestination(transform.position);
 
+        //_navMeshAgent.SetDestination(transform.position);
+        _navMeshAgent.velocity = Vector3.zero;
+        _navMeshAgent.isStopped = true;
+        _navMeshAgent.velocity = Vector3.zero;
+        transform.position = transform.position;
+
+
+        _isFrozen = true;
     }
 
     public void RestartTime()
     {
+        _navMeshAgent.isStopped = false;
+
+
         _isFrozen = false;
     }
 

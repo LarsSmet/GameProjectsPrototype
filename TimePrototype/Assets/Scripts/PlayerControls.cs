@@ -33,21 +33,21 @@ public class PlayerControls : MonoBehaviour
 
     //Cooldown stuff
     private int _timeForwardCharges = 2;
-    private float _maxTimeForwardRechargeTime = 10.0f;
-    private float _currTimeForwardChargeTime = 10.0f;
+    private float _maxTimeForwardRechargeTime = 8.0f;
+    private float _currTimeForwardChargeTime = 8.0f;
     private bool _canTimeForward = true;
     private Image _timeForwardCharge1Visual;
     private Image _timeForwardCharge2Visual;
 
     private int _dashCharges = 2;
-    private float _maxDashCRechargeTime = 10.0f;
-    private float _currDashRechargeTime = 10.0f;
+    private float _maxDashCRechargeTime = 9.0f;
+    private float _currDashRechargeTime = 9.0f;
     private bool _canDash = true;
     private Image _dashCharge1Visual;
     private Image _dashCharge2Visual;
 
-    private float _timeStopMaxCooldown = 10.0f;
-    private float _timeStopCurrCooldown = 10.0f;
+    private float _timeStopMaxCooldown = 12.0f;
+    private float _timeStopCurrCooldown = 12.0f;
     private bool _canStopTime = true;
    
 
@@ -66,6 +66,8 @@ public class PlayerControls : MonoBehaviour
     private List<GameObject> _cloneList = new List<GameObject>();
     public bool _isFrozen = false;
 
+    public float _gravity = -9.81f; 
+    Vector3 _velocity; 
 
     private void Awake()
     {
@@ -211,25 +213,34 @@ public class PlayerControls : MonoBehaviour
 
     }
 
-
+    
 
     private void FixedUpdate()
     {
         if (_playerInputActions.Player.enabled)
         {
-
             Vector2 moveInputVec = _playerInputActions.Player.Move.ReadValue<Vector2>();
-
             Vector3 move = transform.right * moveInputVec.x + transform.forward * moveInputVec.y;
 
+            // Apply gravity
+            if (_controller.isGrounded)
+            {
+                _velocity.y = 0; // Reset vertical velocity when on the ground
 
+                //if (_playerInputActions.Player.Jump.triggered)
+                //{
+                //    _velocity.y = Mathf.Sqrt(_jumpHeight * -2 * _gravity);
+                //}
+            }
 
-            _controller.Move(move * _moveSpeed * Time.fixedDeltaTime);
+            _velocity.y += _gravity * Time.fixedDeltaTime;
 
+            // Apply movement
+            _controller.Move((move * _moveSpeed + _velocity) * Time.fixedDeltaTime);
         }
     }
 
-    
+
 
     private void LateUpdate()
     {
@@ -253,7 +264,7 @@ public class PlayerControls : MonoBehaviour
     {
 
 
-        Debug.Log("MeleeAtack");
+       // Debug.Log("MeleeAtack");
         _meleePlayerAtack.Atack();
 
         if (_isFrozen)
@@ -270,7 +281,7 @@ public class PlayerControls : MonoBehaviour
         if (!_canTimeForward)
             return;
 
-        Debug.Log("TimeForward");
+        //   Debug.Log("TimeForward");
         _timeForwardAtack.ForwardAtack();
         --_timeForwardCharges;
 
@@ -287,7 +298,7 @@ public class PlayerControls : MonoBehaviour
         if (!_canDash)
             return;
 
-        Debug.Log("Dash");
+        //Debug.Log("Dash");
 
         Vector3 dashDirection = _camHolder.transform.forward;
         dashDirection.y = 0;
@@ -306,7 +317,7 @@ public class PlayerControls : MonoBehaviour
         if (!_canRewindTime)
             return;
 
-        Debug.Log("Rewind");
+      //  Debug.Log("Rewind");
         _timeRewind.Rewind();
         _canRewindTime = false;
     
@@ -317,7 +328,7 @@ public class PlayerControls : MonoBehaviour
         if (!_canStopTime)
             return;
 
-        Debug.Log("Stop Time");
+     //   Debug.Log("Stop Time");
         _timeStopAbility.StopTime();
 
 

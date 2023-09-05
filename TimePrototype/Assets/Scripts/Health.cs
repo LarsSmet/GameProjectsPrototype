@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class Health : MonoBehaviour
@@ -42,6 +43,7 @@ public class Health : MonoBehaviour
         if(_currHealth < 0)
         {
             //LOSE
+            Application.Quit();
         }
 
         _healthBar.value = _currHealth;

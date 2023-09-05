@@ -340,7 +340,7 @@ public class PlayerControls : MonoBehaviour
 
         _isFrozen = false;
 
-        Invoke("DeleteClones", 0.5f);
+        Invoke("DeleteClones", 0.3f);
     }
 
     private void DeleteClones()

@@ -285,8 +285,10 @@ MonoBehaviour:
   _rangedAtackDamage: 10
   _enemyProjectilePrefab: {fileID: 3400472501118323416, guid: f0666d39dd3ef074dbf7c100f05745cd, type: 3}
   _projectileShootPos: {fileID: 6962705187892372877}
-  _hearingRange: 8
+  _notifyOtherEnemiesRadius: 12
+  _hearingRange: 9
   _playerHealtRegen: 8
+  _damageAfterMaterial: {fileID: 2100000, guid: 0fb3b842f29ec25469bbfff6d0c6ad0d, type: 2}
 --- !u!54 &8195576974362469698
 Rigidbody:
   m_ObjectHideFlags: 0

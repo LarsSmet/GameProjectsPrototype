@@ -50,7 +50,8 @@ public class EnemyAI : MonoBehaviour
 
     [SerializeField] private GameObject _enemyProjectilePrefab;
     [SerializeField] private Transform _projectileShootPos;
-    
+
+    [SerializeField] private float _notifyOtherEnemiesRadius = 12.0f;
 
     // Start is called before the first frame update
 
@@ -76,6 +77,9 @@ public class EnemyAI : MonoBehaviour
     private Health _playerHealth;
 
     [SerializeField] float _playerHealtRegen = 10.0f;
+
+    [SerializeField] Material _damageAfterMaterial;
+
     void Start()
     {
         _navMeshAgent = GetComponent<NavMeshAgent>();
@@ -95,9 +99,6 @@ public class EnemyAI : MonoBehaviour
     void Update()
     {
        
-
-
-
         if (_isFrozen)
         {
             _navMeshAgent.isStopped = true;
@@ -155,6 +156,8 @@ public class EnemyAI : MonoBehaviour
            
             _dealDamageAfterFreeze = false;
             _health -= _damageAfterFreeze;
+
+   
         }
 
 
@@ -215,7 +218,6 @@ public class EnemyAI : MonoBehaviour
     private void FieldOfViewCheck()
     {
     
-
 
         Collider[] hitCheck = Physics.OverlapSphere(transform.position, _fovRadius, _playerLayer);
         //Check if player is in range
@@ -410,6 +412,33 @@ public class EnemyAI : MonoBehaviour
         }
 
         _health -= damage;
-   }
+
+
+    }
+
+    public void CheckIfOtherEnemies()
+    {
+        Collider[] colliders = Physics.OverlapSphere(transform.position, _notifyOtherEnemiesRadius);
+
+        foreach (Collider col in colliders)
+        {
+            EnemyAI enemy = col.GetComponent<EnemyAI>();
+            if(enemy == null)
+                continue;
+            enemy.PlayerSpottedByOtherEnemyChange();
+
+        }
+
+
+
+    }
+
+    public void PlayerSpottedByOtherEnemyChange()
+    {
+
+        if (_currState == State.Wander)
+            _currState = State.Chase;
+
+    }
 
 }

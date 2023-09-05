@@ -596,7 +596,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 3f9e4fb45e90a3943a78bc52be5f314d, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.822
+      value: 0.47
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 3f9e4fb45e90a3943a78bc52be5f314d, type: 3}
       propertyPath: m_LocalPosition.y
@@ -608,32 +608,40 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 3f9e4fb45e90a3943a78bc52be5f314d, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.17777905
+      value: 0.107090436
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 3f9e4fb45e90a3943a78bc52be5f314d, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0.627175
+      value: -0.73119575
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 3f9e4fb45e90a3943a78bc52be5f314d, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.0036521426
+      value: 0.25020427
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 3f9e4fb45e90a3943a78bc52be5f314d, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.7583092
+      value: -0.6255257
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 3f9e4fb45e90a3943a78bc52be5f314d, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
-      value: -167.44
+      value: -188.999
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 3f9e4fb45e90a3943a78bc52be5f314d, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: -257.379
+      value: -78.643005
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 3f9e4fb45e90a3943a78bc52be5f314d, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 343.68402
+      value: 30.404007
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: 3f9e4fb45e90a3943a78bc52be5f314d, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: 23ee5c82f98d1af44b08d1770262cf35, type: 2}
+    - target: {fileID: -7511558181221131132, guid: 3f9e4fb45e90a3943a78bc52be5f314d, type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: 23ee5c82f98d1af44b08d1770262cf35, type: 2}
     - target: {fileID: 919132149155446097, guid: 3f9e4fb45e90a3943a78bc52be5f314d, type: 3}
       propertyPath: m_Name
       value: kopesh_copy
